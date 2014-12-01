@@ -24,6 +24,7 @@ import pygplates as pgp
 import datetime
 import time
 import os
+import
 
 
 # Filter GPML by selected criteria and output new GPML file of filtered data
