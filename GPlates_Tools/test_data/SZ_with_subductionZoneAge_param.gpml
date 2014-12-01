@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpml:FeatureCollection xmlns:gpml="http://www.gplates.org/gplates" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/XMLSchema-instance" gpml:version="1.6.0322" xsi:schemaLocation="http://www.gplates.org/gplates ../xsd/gpml.xsd http://www.opengis.net/gml ../../../gml/current/base">
+    <gml:featureMember>
+        <gpml:SubductionZone>
+            <gpml:identity>GPlates-1126afcd-7351-42e5-a19e-8d0232bef4a7</gpml:identity>
+            <gpml:revision>GPlates-46370456-00bd-4648-9ef3-f20f08234d2d</gpml:revision>
+            <gml:name>East Philippine Isl Nthward Subduction DiCaprio</gml:name>
+            <gml:validTime>
+                <gml:TimePeriod>
+                    <gml:begin>
+                        <gml:TimeInstant>
+                            <gml:timePosition gml:frame="http://gplates.org/TRS/flat">52</gml:timePosition>
+                        </gml:TimeInstant>
+                    </gml:begin>
+                    <gml:end>
+                        <gml:TimeInstant>
+                            <gml:timePosition gml:frame="http://gplates.org/TRS/flat">15.1</gml:timePosition>
+                        </gml:TimeInstant>
+                    </gml:end>
+                </gml:TimePeriod>
+            </gml:validTime>
+            <gpml:reconstructionPlateId>
+                <gpml:ConstantValue>
+                    <gpml:value>678</gpml:value>
+                    <gpml:valueType xmlns:gpml="http://www.gplates.org/gplates">gpml:plateId</gpml:valueType>
+                </gpml:ConstantValue>
+            </gpml:reconstructionPlateId>
+            <gpml:centerLineOf>
+                <gpml:ConstantValue>
+                    <gpml:value>
+                        <gml:OrientableCurve>
+                            <gml:baseCurve>
+                                <gml:LineString>
+                                    <gml:posList gml:dimension="2">36.9191 120.351 35.173300000000005 119.28300000000002 33.733400000000003 118.464 32.7196 117.91999999999999 30.998499999999996 117.72399999999999 29.545500000000001 117.702 27.338000000000008 117.45699999999999 24.6602 117.60900000000001 21.953900000000001 118.43000000000001 20.315200000000004 119.15499999999999 17.915099999999992 120.05500000000001 16.0364 120.83499999999999 14.2151 121.387 11.421000000000008 121.925 8.8664299999999994 122.66 7.749720000000031 123.24299999999999 6.5235699999999985 123.94400000000002 5.3043300000000002 124.46700000000001 3.7021000000000002 125.045 1.8785000000000003 125.34099999999999 0.084599999999999995 125.39299999999999 -1.7303999999999999 126.134 -3.0185 127.724 -4.625 129.03100000000001 -5.3183999999999996 129.642 -6.0942000000000176 130.43700000000001 -6.5601000000000003 130.91499999999999 -6.8845000000000036 131.34800000000004 -7.2977999999999987 131.83100000000002 </gml:posList>
+                                </gml:LineString>
+                            </gml:baseCurve>
+                        </gml:OrientableCurve>
+                    </gpml:value>
+                    <gpml:valueType xmlns:gml="http://www.opengis.net/gml">gml:OrientableCurve</gpml:valueType>
+                </gpml:ConstantValue>
+            </gpml:centerLineOf>
+            <gpml:subductionPolarity>
+                <gpml:ConstantValue>
+                    <gpml:value>Left</gpml:value>
+                    <gpml:valueType xmlns:gpml="http://www.gplates.org/gplates">gpml:SubductionPolarityEnumeration</gpml:valueType>
+                </gpml:ConstantValue>
+            </gpml:subductionPolarity>
+            <gpml:subductionZoneAge>52</gpml:subductionZoneAge>
+        </gpml:SubductionZone>
+    </gml:featureMember>
+</gpml:FeatureCollection>
