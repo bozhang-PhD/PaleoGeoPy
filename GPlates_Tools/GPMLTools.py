@@ -517,16 +517,10 @@ def filterGPML(**kwargs):
                     if str(feature.get_feature_type()) == "gpml:SubductionZone":
 
                         #print feature.get_name()
-                        #feature.set_valid_time(feature_truncate_age, end_time)
-                        #f11b_result.add(feature)
 
                         for property in feature:
 
                             if str(property.get_name()) == "gpml:subductionZoneAge" and str(property.get_value()) != "gpml:subductionZoneAge" and property.get_value() > feature_truncate_age:
-
-                                #if str(property.get_value()) != "gpml:subductionZoneAge":
-
-                                    #if property.get_value() > feature_truncate_age:
 
                                 subductionAgeCorrection = feature_truncate_age + (np.float(str(property.get_value())) - feature_truncate_age)
                                 #print subductionAgeCorrection
