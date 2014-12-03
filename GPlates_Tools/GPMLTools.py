@@ -24,6 +24,7 @@ import pygplates as pgp
 import datetime
 import time
 import os
+import numpy as np
 
 
 # Filter GPML by selected criteria and output new GPML file of filtered data
@@ -144,6 +145,7 @@ def filterGPML(**kwargs):
 
     try:
         feature = featureCollection.read(inputFile)
+        feature1 = featureCollection.read(inputFile)
         print " "
         print "Data handling:"
         print "    Successfully loaded data file:  '" + str(inputFile) + "'"
@@ -482,61 +484,80 @@ def filterGPML(**kwargs):
             for feature in data_:
 
                 begin_time, end_time = feature.get_valid_time()
+
                 
-                # if begin_time == float('Inf'):
-                #     begin_time = 9999
-                # elif end_time == float('-Inf'):
-                #     end_time = 0
+                if begin_time > feature_truncate_age and end_time > feature_truncate_age:
 
-                #print begin_time, end_time
+                    f11a_result.add(feature)
 
-                # if begin_time > feature_truncate_age and end_time > feature_truncate_age:
 
-                #     f11a_result.add(feature)
+                elif begin_time > feature_truncate_age and end_time <= feature_truncate_age:
 
-                if begin_time > feature_truncate_age and end_time <= feature_truncate_age:
-
+                    # Special case if SubductionZone - need to incorporate start age
                     if str(feature.get_feature_type()) == "gpml:SubductionZone":
-                        
+
                         feature.set_valid_time(begin_time, feature_truncate_age + 0.1)
                         f11a_result.add(feature)
-                        print "a " + str(feature.get_valid_time())
+                        
+                    else:
+
+                        feature.set_valid_time(begin_time, feature_truncate_age + 0.1)
+                        f11a_result.add(feature)
+
+
+            # Limitation of pyGPlates: need to loop through copy of feature
+            for feature in feature1:
+
+                begin_time, end_time = feature.get_valid_time()
+
+        
+                if begin_time > feature_truncate_age and end_time <= feature_truncate_age:
+
+                    # Special case if SubductionZone - need to incorporate start age
+                    if str(feature.get_feature_type()) == "gpml:SubductionZone":
+
+                        #print feature.get_name()
+                        #feature.set_valid_time(feature_truncate_age, end_time)
+                        #f11b_result.add(feature)
+
+                        for property in feature:
+
+                            if str(property.get_name()) == "gpml:subductionZoneAge" and str(property.get_value()) != "gpml:subductionZoneAge" and property.get_value() > feature_truncate_age:
+
+                                #if str(property.get_value()) != "gpml:subductionZoneAge":
+
+                                    #if property.get_value() > feature_truncate_age:
+
+                                subductionAgeCorrection = feature_truncate_age + (np.float(str(property.get_value())) - feature_truncate_age)
+                                #print subductionAgeCorrection
+                                feature.set_valid_time(subductionAgeCorrection, end_time)
+
+                                f11b_result.add(feature)
+
+                                break
+
+                    else:
 
                         feature.set_valid_time(feature_truncate_age, end_time)
                         f11b_result.add(feature)
-                        print "b " + str(feature.get_valid_time())
 
 
-                    # elif str(feature.get_feature_type()) == "gpml:SubductionZone":
+                elif begin_time == feature_truncate_age:
 
-                    #     feature.set_valid_time(begin_time, feature_truncate_age + 0.1)
-                    #     f11a_result.add(feature)
-                    #     print "a " + str(feature.get_valid_time())
-
-                    #     feature.set_valid_time(feature_truncate_age, end_time)
-                    #     f11b_result.add(feature)
-                    #     print "b " + str(feature.get_valid_time())
-                       
+                    f11b_result.add(feature)
 
 
-                # elif begin_time == feature_truncate_age:
+                elif begin_time <= feature_truncate_age and end_time < feature_truncate_age:
 
-                #     f11b_result.add(feature)
+                    f11b_result.add(feature)
 
-
-                # elif begin_time <= feature_truncate_age and end_time < feature_truncate_age:
-
-                #     f11b_result.add(feature)
-
-
-
-
+                
             print "    11. File truncated by age boundary: " + str(feature_truncate_age) + " Ma"
-            print "       - Found " + str(len(f11a_result)) + " feature(s) in older collection."
-            print "       - Found " + str(len(f11b_result)) + " feature(s) in younger collection."
+            print "       - Created " + str(len(f11a_result)) + " feature(s) older than truncation boundary."
+            print "       - Created " + str(len(f11b_result)) + " feature(s) younger than truncation boundary."
             print " "
 
-            previousFilter = 11
+        previousFilter = 11
 
 
 
@@ -544,22 +565,26 @@ def filterGPML(**kwargs):
     # output new feature collection from filtered data to file
 
     if previousFilter == 11:
+
         iso_output1 = eval("f" + str(previousFilter) + "a_result")
         iso_output2 = eval("f" + str(previousFilter) + "b_result")
 
-        if iso_output1:
-            outputFeatureCollection = pgp.FeatureCollectionFileFormatRegistry()
-            outputFeatureCollection.write(iso_output1, "output/>" + str(feature_truncate_age) + "Ma_" + str(outputFile))
+        if len(iso_output1) != 0:
+            
+            outputFeatureCollection1 = pgp.FeatureCollectionFileFormatRegistry()
+            outputFeatureCollection1.write(iso_output1, "output/>" + str(feature_truncate_age) + "Ma_" + str(outputFile))
 
+            print " "
             print "Output file 1:"
             print "    ../output/" + ">" + str(feature_truncate_age) + "Ma_"+ str(outputFile)
             print " "
             print "Process took " + str(round(time.time() - start, 2)) + " seconds."
             print " "
 
-        if iso_output2:
-            outputFeatureCollection = pgp.FeatureCollectionFileFormatRegistry()
-            outputFeatureCollection.write(iso_output2, "output/<" + str(feature_truncate_age) + "Ma_" + str(outputFile))
+        if len(iso_output2) != 0:
+            
+            outputFeatureCollection2 = pgp.FeatureCollectionFileFormatRegistry()
+            outputFeatureCollection2.write(iso_output2, "output/<" + str(feature_truncate_age) + "Ma_" + str(outputFile))
 
             print "Output file 2:"
             print "    ../output/" + "<" + str(feature_truncate_age) + "Ma_"+ str(outputFile)
@@ -567,7 +592,9 @@ def filterGPML(**kwargs):
             print "Process took " + str(round(time.time() - start, 2)) + " seconds."
             print "--------------------------------------------"
 
-    else:    
+
+    else:
+        
         iso_output = eval("f" + str(previousFilter) + "_result")
 
         outputFeatureCollection = pgp.FeatureCollectionFileFormatRegistry()
