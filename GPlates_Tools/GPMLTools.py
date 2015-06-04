@@ -557,7 +557,7 @@ def filterGPML(**kwargs):
             print "       - Created " + str(len(f11b_result)) + " feature(s) younger than truncation boundary."
             print " "
 
-        previousFilter = 11
+            previousFilter = 11
 
 
 
@@ -594,11 +594,11 @@ def filterGPML(**kwargs):
 
 
     else:
-        
+
         iso_output = eval("f" + str(previousFilter) + "_result")
 
         outputFeatureCollection = pgp.FeatureCollectionFileFormatRegistry()
-        outputFeatureCollection.write(iso_output, "output/" + str(outputFile))
+        outputFeatureCollection.write(iso_output, outputFile)
 
         print "Output file:"
         print "    ../output/" + str(outputFile)
