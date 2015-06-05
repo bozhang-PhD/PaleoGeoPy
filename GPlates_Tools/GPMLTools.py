@@ -601,7 +601,7 @@ def filterGPML(**kwargs):
         outputFeatureCollection.write(iso_output, outputFile)
 
         print "Output file:"
-        print "    ../output/" + str(outputFile)
+        print str(outputFile)
         print " "
         print "Process took " + str(round(time.time() - start, 2)) + " seconds."
         print "--------------------------------------------"
