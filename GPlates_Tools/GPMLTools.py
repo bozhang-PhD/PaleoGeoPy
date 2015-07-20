@@ -34,9 +34,13 @@ def filterGPML(**kwargs):
     start = time.time()
 
     filterProperties = ["inputFile", "outputFile", "filterSequence", "rPlateID", "cPlateID", "ageAppearWindow", "ageDisappearWindow",
-                        "ageExistsWindow", "boundingBox", "featureType", "geometryType", "featureID", "featureName", "feature_truncate_age"]
+                        "ageExistsWindow", "boundingBox", "featureType", "geometryType", "featureID", "featureName", "feature_truncate_age", "inverse"]
 
     # Process supplied arguments and assign values to variables
+
+    # Inverse is set to False by default
+    inverse = False
+
     for parameter, value in kwargs.items():
 
         if parameter in filterProperties:
@@ -108,6 +112,8 @@ def filterGPML(**kwargs):
                 featureName = value
             elif parameter == filterProperties[13]:
                 feature_truncate_age = value
+            elif parameter == filterProperties[14]:
+                inverse = value
 
 
         else:
@@ -224,10 +230,20 @@ def filterGPML(**kwargs):
                         selected_filter_property = property.get_value()
 
                         # Isolate criteria match and process
-                        for plateID in rPlateID:
-                            if str(selected_filter_property) == str(plateID):
+                        if inverse == False:
 
-                                # Append filtered data to associated Feature Collection
+                            for plateID in rPlateID:
+
+                                if str(selected_filter_property) == str(plateID):
+
+                                    # Append filtered data to associated Feature Collection
+                                    f1_result.add(feature)
+
+                        elif inverse == True:
+
+                            if int(str(selected_filter_property)) not in rPlateID:
+								
+    							# Append filtered data to associated Feature Collection
                                 f1_result.add(feature)
 
             print "    1. Filtering data by reconstruction plate ID(s): " + str(rPlateID)
@@ -249,9 +265,19 @@ def filterGPML(**kwargs):
                         selected_filter_property = property.get_value()
 
                         # Isolate criteria match and process
-                        for plateID in cPlateID:
-                            if str(selected_filter_property) == str(plateID):
+                        if inverse == False:
 
+                            for plateID in cPlateID:
+
+                                if str(selected_filter_property) == str(plateID):
+
+                                    # Append filtered data to associated Feature Collection
+                                    f2_result.add(feature)
+
+                        elif inverse == True:
+
+                            if int(str(selected_filter_property)) not in cPlateID:
+                                
                                 # Append filtered data to associated Feature Collection
                                 f2_result.add(feature)
 
