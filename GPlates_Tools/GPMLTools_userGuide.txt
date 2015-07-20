@@ -36,17 +36,22 @@
 
 # Filter types (numbered) and usage:
 
+# Inverse filtering is now possible for both reconstruction (rPlateID) and conjugate (cPLateID) searches. This filter will return all features with plateIDs that are NOT found within the input array. Default is False (no need to ever include this in parameters).
+
+
 # 1.    Name:   Reconstruction plate ID
 #       var:    rPlateID
 #       Type:   list of integers (length = inf)
 #       Usage:  Single parameter:   rPlateID=[801]
 #               Multi parameter:    rPlateID=[801,701,101]
+#				Inverse:			inverse=True
 
 # 2.    Name:   Conjugate plate ID
 #       var:    cPlateID
 #       Type:   list of integers (length = inf)
 #       Usage:  Single parameter:   cPlateID=[801]
 #               Multi parameter:    cPlateID=[801,701,101]
+#				Inverse:			inverse=True
 
 # 3.    Name:   Age of appearance window
 #       Desc:   Finds features the appear within (and including) a specified time period or 'window'.
