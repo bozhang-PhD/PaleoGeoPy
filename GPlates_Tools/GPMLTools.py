@@ -243,12 +243,22 @@ def filterGPML(**kwargs):
 
                                 if filter_property.get_name() == "conjugatePlateId":
                                     second_filter_property = property.get_value()
-                         
-                                    # Isolate criteria match and process
-                                    if str(selected_filter_property) == str(rPlateID[0]) and str(second_filter_property) == str(cPlateID[0]):
 
-                                        # Append filtered data to associated Feature Collection
-                                        f1_result.add(feature)
+                                    if inverse == False:
+                         
+                                        # Isolate criteria match and process
+                                        if str(selected_filter_property) == str(rPlateID[0]) and str(second_filter_property) == str(cPlateID[0]):
+
+                                            # Append filtered data to associated Feature Collection
+                                            f1_result.add(feature)
+
+                                    elif inverse == True:
+
+                                        if int(str(selected_filter_property)) not in rPlateID or int(str(second_filter_property)) not in cPlateID:
+
+                                            # Append filtered data to associated Feature Collection
+                                            f1_result.add(feature)
+
 
 
                 elif cascade == True:
