@@ -34,12 +34,15 @@ def filterGPML(**kwargs):
     start = time.time()
 
     filterProperties = ["inputFile", "outputFile", "filterSequence", "rPlateID", "cPlateID", "ageAppearWindow", "ageDisappearWindow",
-                        "ageExistsWindow", "boundingBox", "featureType", "geometryType", "featureID", "featureName", "feature_truncate_age", "inverse"]
+                        "ageExistsWindow", "boundingBox", "featureType", "geometryType", "featureID", "featureName", "feature_truncate_age", "inverse", "cascade"]
 
     # Process supplied arguments and assign values to variables
 
     # Inverse is set to False by default
     inverse = False
+
+    # Cascade is set to True  by default
+    cascade = True
 
     for parameter, value in kwargs.items():
 
@@ -114,6 +117,8 @@ def filterGPML(**kwargs):
                 feature_truncate_age = value
             elif parameter == filterProperties[14]:
                 inverse = value
+            elif parameter == filterProperties[15]:
+                cascade = value
 
 
         else:
@@ -222,32 +227,71 @@ def filterGPML(**kwargs):
         if filter_ == 1:
 
             for feature in data_:
-                for property in feature:
 
-                    filter_property = property.get_name()
+                if cascade == False:
 
-                    if filter_property.get_name() == "reconstructionPlateId":
-                        selected_filter_property = property.get_value()
+                    for property in feature:
 
-                        # Isolate criteria match and process
-                        if inverse == False:
+                        filter_property = property.get_name()
 
-                            for plateID in rPlateID:
+                        if filter_property.get_name() == "reconstructionPlateId":
+                            selected_filter_property = property.get_value()
 
-                                if str(selected_filter_property) == str(plateID):
+                            for property in feature:
 
-                                    # Append filtered data to associated Feature Collection
+                                filter_property = property.get_name()
+
+                                if filter_property.get_name() == "conjugatePlateId":
+                                    second_filter_property = property.get_value()
+                         
+                                    # Isolate criteria match and process
+                                    if str(selected_filter_property) == str(rPlateID[0]) and str(second_filter_property) == str(cPlateID[0]):
+
+                                        # Append filtered data to associated Feature Collection
+                                        f1_result.add(feature)
+
+
+                elif cascade == True:
+
+                    for property in feature:
+
+                        filter_property = property.get_name()
+
+                        if filter_property.get_name() == "reconstructionPlateId":
+                            selected_filter_property = property.get_value()
+
+                            if inverse == False:
+
+                                for plateID in rPlateID:
+
+                                    if str(selected_filter_property) == str(plateID):
+
+                                        # Append filtered data to associated Feature Collection
+                                        f1_result.add(feature)
+
+                            elif inverse == True:
+
+                                if int(str(selected_filter_property)) not in rPlateID:
+        							
+        							# Append filtered data to associated Feature Collection
                                     f1_result.add(feature)
 
-                        elif inverse == True:
+                        
 
-                            if int(str(selected_filter_property)) not in rPlateID:
-								
-    							# Append filtered data to associated Feature Collection
-                                f1_result.add(feature)
+            if cascade == False:
+                print "Oooooh, you found the secret command..."
+                print " "
+                print "    1. Filtering data by reconstruction plate ID: " + str(rPlateID) + " and conjugate plate ID: " + str(cPlateID)
+                print "       - Found " + str(len(f1_result)) + " feature(s)."
 
-            print "    1. Filtering data by reconstruction plate ID(s): " + str(rPlateID)
-            print "       - Found " + str(len(f1_result)) + " feature(s)."
+                cascade = True
+
+            else:
+
+                print " "
+                print "    1. Filtering data by reconstruction plate ID(s): " + str(rPlateID)
+                print "       - Found " + str(len(f1_result)) + " feature(s)."
+
             print " "
 
             previousFilter = 1
