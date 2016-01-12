@@ -1,7 +1,8 @@
 """
-    Copyright (C) 2015  Michael G. Tetley
+    Copyright (C) 2016  Michael G. Tetley
     EarthByte Group, University of Sydney
-    Contact email: michael.tetley@sydney.edu.au
+    Geological and Planetary Sciences, California Institute of Technology
+    Contact email: michael.tetley@sydney.edu.au // mtetley@caltech.edu
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -20,21 +21,20 @@
 
     ## Geoscience Toolbox ##
 
-    Set of tools to calculate useful things in Geoscience
+    Set of tools to calculate useful things for geoscience and palaeomagnetics research
 """
 
 # Import required libraries
 import numpy as np
 
 
-
+""" GEOSCIENCE """
 """
-    Haversine
+    haversine
 
     Module to calculate the great circle distance between two points on a sphere.
     Returns distances in kilometers.
 """
-
 def haversine(lon1, lat1, lon2, lat2):
 
     # convert decimal degrees to radians
@@ -49,3 +49,22 @@ def haversine(lon1, lat1, lon2, lat2):
     km = 6371 * c
 
     return km
+
+
+
+""" PALAEOMAGNETICS """
+"""
+    calcKfromA95
+
+    Calculate koenigsberger ratio (k) from alpha 95 confidence limit (A95) and number of samples (n).
+    Returns k 
+"""
+def calcKfromA95(alpha95, n):
+
+    alpha95 = np.radians(alpha95)
+    fac = 20.**(1. / (n - 1))
+    r2 = 1. / (fac - np.cos(alpha95))
+    r2 = r2 * n * (fac - 1.)
+    k = (n - 1.) / (n - r2)
+
+    return k
