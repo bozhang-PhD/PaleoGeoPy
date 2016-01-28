@@ -26,6 +26,7 @@
 
 # Import required libraries
 import numpy as np
+import pygplates as pgp
 
 
 """ GEOSCIENCE """
@@ -49,6 +50,63 @@ def haversine(lon1, lat1, lon2, lat2):
     km = 6371 * c
 
     return km
+
+
+"""
+    global_points_rand
+
+    Module to generate a random distribution of lat / lon points on the Earth
+    Returns length = samples list of latitudes and longitudes
+"""
+def global_points_rand(samples):
+
+    lats = []
+    lons = []
+
+    for i in xrange(0, samples):
+
+        theta = 2 * np.pi * np.random.random()
+        phi = np.arccos(2 * np.random.random() - 1.0)
+        
+        x = np.cos(theta) * np.sin(phi)
+        y = np.sin(theta) * np.sin(phi)
+        z = np.cos(phi)
+        
+        point = pgp.convert_point_on_sphere_to_lat_lon_point((x,y,z))
+        lats.append(point.get_latitude())
+        lons.append(point.get_longitude())
+
+    return lats, lons
+
+
+"""
+    global_points_uniform
+
+    Module to generate a uniform (even) distribution of lat / lon points on the Earth
+    Returns length = samples list of latitudes and longitudes
+"""
+def global_points_uniform(samples):
+
+    lats = []
+    lons = []
+
+    angle = np.pi * (3 - np.sqrt(5))
+    theta = angle * np.arange(samples)
+    z = np.linspace(1 - 1.0 / samples, 1.0 / samples - 1, samples)
+    radius = np.sqrt(1 - z * z)
+     
+    points = np.zeros((samples, 3))
+    points[:,0] = radius * np.cos(theta)
+    points[:,1] = radius * np.sin(theta)
+    points[:,2] = z
+
+    for i in xrange(0, len(points)):
+        
+        point = pgp.convert_point_on_sphere_to_lat_lon_point((points[i][0], points[i][1], points[i][2]))
+        lats.append(point.get_latitude())
+        lons.append(point.get_longitude())
+
+    return lats, lons
 
 
 
