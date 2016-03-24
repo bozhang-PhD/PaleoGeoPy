@@ -27,14 +27,17 @@
 # Import required libraries
 import numpy as np
 import pygplates as pgp
+import ipmag
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
 
 
 """ GEOSCIENCE """
 """
     haversine
 
-    Module to calculate the great circle distance between two points on a sphere.
-    Returns distances in kilometers.
+    Module to calculate the great circle distance and bearing between two points on a sphere.
+    Returns distance in kilometers and bearing in degrees.
 """
 def haversine(lon1, lat1, lon2, lat2):
 
@@ -43,13 +46,18 @@ def haversine(lon1, lat1, lon2, lat2):
 
     dlon = lon2 - lon1
     dlat = lat2 - lat1
+
     a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
     c = 2 * np.arcsin(np.sqrt(a))
 
     # Radius of the Earth
     km = 6371 * c
 
-    return km
+    bearing = np.arctan2(np.sin(lon2-lon1) * np.cos(lat2), np.cos(lat1) * np.sin(lat2) - np.sin(lat1) * np.cos(lat2) * np.cos(lon2-lon1))
+    bearing = np.degrees(bearing)
+    bearing = (bearing + 360) % 360
+
+    return km, bearing
 
 
 """
@@ -85,7 +93,7 @@ def global_points_rand(samples):
     Module to generate a uniform (even) distribution of lat / lon points on the Earth
     Returns length = samples list of latitudes and longitudes
 """
-def global_points_uniform(samples):
+def global_points_uniform(samples, plotResult=False, projection='robin'):
 
     lats = []
     lons = []
@@ -105,6 +113,22 @@ def global_points_uniform(samples):
         point = pgp.convert_point_on_sphere_to_lat_lon_point((points[i][0], points[i][1], points[i][2]))
         lats.append(point.get_latitude())
         lons.append(point.get_longitude())
+
+    if plotResult == True:
+
+        # Plot start seeds
+        m = Basemap(projection=projection,lat_0=0,lon_0=0,resolution='c',area_thresh=50000)
+        plt.figure(figsize=(7, 7))
+        plt.title("n = " + str(samples) + " uniformly distributed global 'seed' locations")
+        m.drawcoastlines(linewidth=0.25)
+        m.fillcontinents(color='bisque',zorder=1)
+        m.drawmeridians(np.arange(0,360,30))
+        m.drawparallels(np.arange(-90,90,30))
+
+        ipmag.plot_vgp(m, lons, lats)
+
+        plt.show()
+
 
     return lats, lons
 

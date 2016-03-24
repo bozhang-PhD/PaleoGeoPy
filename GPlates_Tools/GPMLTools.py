@@ -527,7 +527,9 @@ def filterGPML(**kwargs):
             for feature in data_:
 
                 for id in featureID:
+
                     if str(feature.get_feature_id()).lower() == str(id).lower():
+                    
                         f9_result.add(feature)
 
             print "    9. Filtering data by feature ID: " + str(featureID)

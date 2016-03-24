@@ -67,14 +67,7 @@
 #       Type:   list of integers or floats (length = 2)
 #       Usage:  ageDisappearWindow=[oldest, youngest]
 
-# 5.    Name:   Age of existence window
-#       Desc:   Finds features that exists within (and including) a specified time period or 'window'.
-#               Age windows are defined [oldest, youngest]. Values can be integers or floats.
-#       var:    ageExistsWindow
-#       Type:   list of integers or floats (length = 2)
-#       Usage:  ageExistsWindow=[oldest, youngest]
-
-# 6.    Name:   Geographic bounding box
+# 5.    Name:   Geographic bounding box
 #       Desc:   Finds all features that are located all or in part within the specified geographic bounding box.
 #               Bounding boxes are defined [Longitude 1, Longitude 2, Latitude 1, Latitude 2]. Longitude 1 is the
 #               easternmost limit (max 0), Longitude 2 is the westernmost limit (max 360), Latitude 1 is the
@@ -83,6 +76,13 @@
 #       var:    boundingBox
 #       Type:   list of integers or floats (length = 4)
 #       Usage:  boundingBox=[0, 360, -90, 90]
+
+# 6.    Name:   Age of existence window
+#       Desc:   Finds features that exists within (and including) a specified time period or 'window'.
+#               Age windows are defined [oldest, youngest]. Values can be integers or floats.
+#       var:    ageExistsWindow
+#       Type:   list of integers or floats (length = 2)
+#       Usage:  ageExistsWindow=[oldest, youngest]
 
 # 7.    Name:   Feature type
 #       Desc:   Finds all features of specified feature type. Currently supported feature types:
@@ -109,10 +109,11 @@
 #               Multi parameter:    geometryType=["PointOnSphere", "MultiPointOnSphere", "PolyLineOnSphere"]
 
 # 9.    Name:   Feature ID
-#       Desc:   Finds all features with specified feature ID. ID's are case insensitive.
+#       Desc:   Finds all features with specified feature ID. ID's are case insensitive. N.B. Only works for "gpml:identity" - not "gpml:revision"
 #       var:    featureID
-#       Type:   string
-#       Usage:  featureID="GPlates-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+#       Type:   list of strings (length = inf)
+#       Usage:  Single parameter:   featureID=["GPlates-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"]
+				Multi parameter:    featureID=["GPlates-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "GPlates-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"]
 
 # 10.   Name:   Feature name
 #       Desc:   Finds all features containing some or all of specified feature name string. Names are case insensitive.
