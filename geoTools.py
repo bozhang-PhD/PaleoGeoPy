@@ -29,6 +29,8 @@ import numpy as np
 import pygplates as pgp
 import ipmag
 import matplotlib.pyplot as plt
+import pylab
+
 from mpl_toolkits.basemap import Basemap
 
 
@@ -57,7 +59,7 @@ def haversine(lon1, lat1, lon2, lat2):
     bearing = np.degrees(bearing)
     bearing = (bearing + 360) % 360
 
-    return km, bearing
+    return km, np.rad2deg(c), bearing
 
 
 """
@@ -75,11 +77,11 @@ def global_points_rand(samples):
 
         theta = 2 * np.pi * np.random.random()
         phi = np.arccos(2 * np.random.random() - 1.0)
-        
+
         x = np.cos(theta) * np.sin(phi)
         y = np.sin(theta) * np.sin(phi)
         z = np.cos(phi)
-        
+
         point = pgp.convert_point_on_sphere_to_lat_lon_point((x,y,z))
         lats.append(point.get_latitude())
         lons.append(point.get_longitude())
@@ -102,14 +104,14 @@ def global_points_uniform(samples, plotResult=False, projection='robin'):
     theta = angle * np.arange(samples)
     z = np.linspace(1 - 1.0 / samples, 1.0 / samples - 1, samples)
     radius = np.sqrt(1 - z * z)
-     
+
     points = np.zeros((samples, 3))
     points[:,0] = radius * np.cos(theta)
     points[:,1] = radius * np.sin(theta)
     points[:,2] = z
 
     for i in xrange(0, len(points)):
-        
+
         point = pgp.convert_point_on_sphere_to_lat_lon_point((points[i][0], points[i][1], points[i][2]))
         lats.append(point.get_latitude())
         lons.append(point.get_longitude())
@@ -133,13 +135,48 @@ def global_points_uniform(samples, plotResult=False, projection='robin'):
     return lats, lons
 
 
+"""
+    checkLatLon
+
+    Simple function to check incoming lat and lon are within correct ranges.
+"""
+def checkLatLon(lat, lon):
+
+    if lon > 180:
+
+        lon_corrected = -360 + lon
+
+    elif lon < -180:
+
+        lon_corrected = lon + 360
+
+    elif lon > -180 and lon < 180:
+
+        lon_corrected = lon
+
+    if lat > 90:
+
+        lat_corrected = -180 + lat
+
+    elif lat < -90:
+
+        lat_corrected = lat + 180
+
+    elif lat > -90 and lat < 90:
+
+        lat_corrected = lat
+
+    return lat_corrected, lon_corrected
+
+
+
 
 """ PALAEOMAGNETICS """
 """
     calcKfromA95
 
     Calculate koenigsberger ratio (k) from alpha 95 confidence limit (A95) and number of samples (n).
-    Returns k 
+    Returns k
 """
 def calcKfromA95(alpha95, n):
 
