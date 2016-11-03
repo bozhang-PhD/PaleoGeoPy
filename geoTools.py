@@ -150,7 +150,7 @@ def checkLatLon(lat, lon):
 
         lon_corrected = lon + 360
 
-    elif lon > -180 and lon < 180:
+    elif lon >= -180 and lon <= 180:
 
         lon_corrected = lon
 
@@ -162,7 +162,7 @@ def checkLatLon(lat, lon):
 
         lat_corrected = lat + 180
 
-    elif lat > -90 and lat < 90:
+    elif lat >= -90 and lat <= 90:
 
         lat_corrected = lat
 
