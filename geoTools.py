@@ -169,6 +169,25 @@ def checkLatLon(lat, lon):
     return lat_corrected, lon_corrected
 
 
+"""
+
+    featureScaling
+
+    Normalise dataset using feature scaling
+"""
+def featureScaling(data):
+
+    norm_data = []
+    min_data = np.min(data)
+    max_data = np.max(data)
+
+    for i in xrange(0, len(data)):
+
+        norm_data.append( (data[i] - min_data) / (max_data - min_data) )
+
+    return np.array(norm_data)
+
+
 
 
 """ PALAEOMAGNETICS """
