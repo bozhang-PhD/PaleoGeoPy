@@ -178,8 +178,8 @@ def checkLatLon(lat, lon):
 def featureScaling(data):
 
     norm_data = []
-    min_data = np.min(data)
-    max_data = np.max(data)
+    min_data = np.nanmin(data)
+    max_data = np.nanmax(data)
 
     for i in xrange(0, len(data)):
 
